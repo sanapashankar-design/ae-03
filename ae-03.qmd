@@ -20,10 +20,38 @@ hotels <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesda
 
 # Part 1 - Cost of daily hotel stay
 
+```{r}
+#recreating average cost of hotel stay viz
 
+hotelsavgprice <- hotels %>%
+  mutate(
+    arrival_date = glue::glue("{arrival_date_year}-{arrival_date_month}-{arrival_date_day_of_month}"),
+    arrival_date = ymd(arrival_date)) %>%
+  group_by(hotel, arrival_date) %>%
+  summarize(mean_avgprice = mean(adr), .groups = "drop")
+
+
+ggplot(hotelsavgprice, aes(x = arrival_date, y = mean_avgprice, group = hotel, color = hotel)) + 
+  geom_line() + 
+  scale_color_manual(values = c("cornsilk4", "deepskyblue3")) + 
+  scale_y_continuous(labels = label_dollar()) + 
+  labs(x = "Arrival date", 
+       y = "Mean average\ndaily rate(USD)", 
+       title = "Cost of daily hotel stay",
+       subtitle = "July 2015 to August 2017",
+       color = NULL, 
+       caption = "Source: Antonio, Almeida and Nunes(2019)|TidyTuesday") + 
+  theme(legend.position = c(0.15, 0.9), 
+        legend.box.background = element_rect(color = NA, fill = "white"))
+  
+  
+  
+
+
+  
+
+```
 
 # Part 2 - Number of monthly bookings
-
-
 
 # Part 3 - Mean number of stays
