@@ -54,4 +54,47 @@ ggplot(hotelsavgprice, aes(x = arrival_date, y = mean_avgprice, group = hotel, c
 
 # Part 2 - Number of monthly bookings
 
+```{r}
+#making number of monthly booking visualization
+
+hotels <- hotels %>%
+  mutate(
+    arrival_date_month = fct_relevel(arrival_date_month, month.name), 
+season = case_when(
+  arrival_date_month %in% c("December", "January", "February") ~ "Winter", 
+  arrival_date_month %in% c("March", "April", "May") ~ "Spring", 
+  arrival_date_month %in% c("June", "July", "August") ~ "Summer", 
+  TRUE ~ "Fall"
+), 
+season = fct_relevel(season, "Winter", "Spring", "Summer", "Fall"))
+
+hotels %>%
+  count(season, hotel, arrival_date_month) %>%
+  ggplot(aes(x = arrival_date_month, y = n, group = hotel, linetype = hotel)) + 
+  geom_line(linewidth = 0.8, color = "cornsilk4") + 
+  geom_point(aes(shape = season, color = season), size = 4, show.legend = FALSE) + 
+    scale_x_discrete(labels = month.abb) + 
+  scale_color_colorblind() + 
+  scale_shape_manual(values = c("circle", "square", "diamond", "triangle")) + 
+  labs(title = "Number of monthly bookings",
+       subtitle = "July 2015 to August 2017",
+       y = "Number of bookings", 
+       x = "Arrival month", 
+       caption = "Source: Antonio, Almeida and Nunes(2019) | TidyTuesday") + 
+  coord_cartesian(clip = "off") + 
+  theme(legend.position = c(0.15, 0.9), 
+        legend.box.background = element_rect(color = NA, fill = "white"), 
+        plot.subtitle = element_text(color = "cornsilk4"), 
+        plot.caption = element_text(color = "cornsilk4"))
+
+  
+
+
+
+
+
+
+
+```
+
 # Part 3 - Mean number of stays
